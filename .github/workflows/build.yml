@@ -1,0 +1,56 @@
+name: App Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    env:
+      SOLUTION_NAME: MDD4All.Configuration
+
+    steps:
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Get version form file
+      uses: pCYSl5EDgo/cat@master
+      id: fileVersion
+      with: 
+        path: src/version.txt
+
+    - name: Set version as environment variable
+      env:
+        FILE_VERSION: ${{steps.fileVersion.outputs.text}}
+      run: echo ("VERSION=" + $env:FILE_VERSION + "." + $env:GITHUB_RUN_NUMBER) >> $env:GITHUB_ENV
+
+    - name: Echo version number
+      run: echo $env:VERSION
+
+    - name: Restore dependencies
+      run: dotnet restore ./src/${{env.SOLUTION_NAME}}.sln
+
+    - name: Build
+      run: dotnet build --no-restore -c Release /p:Version=${{env.VERSION}} ./src/${{env.SOLUTION_NAME}}.sln
+
+
+    - name: Create nuget package(s)
+      run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output ./Output ./src/${SOLUTION_NAME}.sln
+
+    - name: Upload artifact(s)
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{env.SOLUTION_NAME}}.${{env.VERSION}}
+        path: ./Output/*.nupkg
+      
