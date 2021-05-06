@@ -76,13 +76,13 @@ jobs:
     - name: Restore dependencies
       run: nuget restore ./src/${{env.SOLUTION_NAME}}.sln
 
-    - name: Build
+    - name: Build entire solution
       run: msbuild /p:Configuration=Release /p:Version=${{env.VERSION}} ./src/${{env.SOLUTION_NAME}}.sln
 
-    - name: Create nuget for Configuration
-      run: nuget pack ./src/${{env.SOLUTION_NAME}}/${{env.SOLUTION_NAME}}.csproj -Version $env:VERSION -OutputDirectory ./Output -Properties Configuration=Release
+    - name: Create nuget for Configuration (.NET Standard)
+      run: dotnet pack --configuration Release /p:Version=${VERSION} --output ./Output ./src/${SOLUTION_NAME}/${SOLUTION_NAME}.csproj
 
-    - name: Create nuget for Views
+    - name: Create nuget for Views (.NET Framework)
       run: nuget pack ./src/${{env.VIEWS_PROJECT}}/${{env.VIEWS_PROJECT}}.csproj -Version $env:VERSION -OutputDirectory ./Output -Properties Configuration=Release
 
     - name: Upload artifact(s)
