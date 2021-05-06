@@ -9,11 +9,11 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("MDD4All.Configuration.Views")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("App configuration/settings UI.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("KARL MAYER Holding GmbH & Co. KG")]
+[assembly: AssemblyCompany("MDD4All.de")]
 [assembly: AssemblyProduct("MDD4All.Configuration.Views")]
-[assembly: AssemblyCopyright("Copyright © KARL MAYER Holding GmbH & Co. KG 2021")]
+[assembly: AssemblyCopyright("© MDD4All.de")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

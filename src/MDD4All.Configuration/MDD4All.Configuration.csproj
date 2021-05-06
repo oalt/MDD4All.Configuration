@@ -6,6 +6,11 @@
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>MDD4All_Github.snk</AssemblyOriginatorKeyFile>
+    <Authors>Dr. Oliver Alt</Authors>
+    <Company>MDD4All.de</Company>
+    <Description>Application configuration/settings data management.</Description>
+    <Copyright>(c) MDD4All.de</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
