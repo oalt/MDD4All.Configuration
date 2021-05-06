@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDD4All.Configuration", "MDD4All.Configuration\MDD4All.Configuration.csproj", "{4B7AFE7E-511B-4B15-BD5F-7CB84EF86671}"
 EndProject
@@ -9,6 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDD4All.Configuration.Views
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AC0FA22B-8E0F-4886-AB08-A85D427153DC}"
 	ProjectSection(SolutionItems) = preProject
+		..\.github\workflows\build.yml = ..\.github\workflows\build.yml
 		MDD4All.Configuration.sln.licenseheader = MDD4All.Configuration.sln.licenseheader
 		version.txt = version.txt
 	EndProjectSection

@@ -12,6 +12,7 @@ jobs:
     runs-on: windows-latest
     env:
       SOLUTION_NAME: MDD4All.Configuration
+      VIEWS_PROJECT: MDD4All.Configuration.Views
 
     steps:
     - name: Checkout repository and submodules
@@ -38,15 +39,23 @@ jobs:
     - name: Echo version number
       run: echo $env:VERSION
 
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+
     - name: Restore dependencies
-      run: dotnet restore ./src/${{env.SOLUTION_NAME}}.sln
+      run: nuget restore ./src/${SOLUTION_NAME}.sln
 
     - name: Build
-      run: dotnet build --no-restore -c Release /p:Version=${{env.VERSION}} ./src/${{env.SOLUTION_NAME}}.sln
+      run: msbuild /p:Configuration=Release /p:Version=${{env.VERSION}} ./src/${{env.SOLUTION_NAME}}.sln
 
+    - name: Create nuget for ${SOLUTION_NAME}
+      run: nuget pack ./src/${SOLUTION_NAME}/${SOLUTION_NAME}.csproj -Version ${VERSION} -OutputDirectory ./Output -Properties Configuration=Release
 
-    - name: Create nuget package(s)
-      run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output ./Output ./src/${SOLUTION_NAME}.sln
+    - name: Create nuget for ${VIEWS_PROJECT}
+      run: nuget pack ./src/${VIEWS_PROJECT}/${VIEWS_PROJECT}.csproj -Version ${VERSION} -OutputDirectory ./Output -Properties Configuration=Release
 
     - name: Upload artifact(s)
       uses: actions/upload-artifact@v2
