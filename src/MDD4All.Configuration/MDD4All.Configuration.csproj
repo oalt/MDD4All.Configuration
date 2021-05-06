@@ -11,6 +11,7 @@
     <Description>Application configuration/settings data management.</Description>
     <Copyright>(c) MDD4All.de</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>App Settings Infrastructure</PackageTags>
   </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
