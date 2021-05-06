@@ -46,16 +46,16 @@ jobs:
       uses: nuget/setup-nuget@v1
 
     - name: Restore dependencies
-      run: nuget restore ./src/${SOLUTION_NAME}.sln
+      run: nuget restore ./src/${{env.SOLUTION_NAME}}.sln
 
     - name: Build
       run: msbuild /p:Configuration=Release /p:Version=${{env.VERSION}} ./src/${{env.SOLUTION_NAME}}.sln
 
-    - name: Create nuget for ${SOLUTION_NAME}
-      run: nuget pack ./src/${SOLUTION_NAME}/${SOLUTION_NAME}.csproj -Version ${VERSION} -OutputDirectory ./Output -Properties Configuration=Release
+    - name: Create nuget for ${{env.SOLUTION_NAME}}
+      run: nuget pack ./src/${{env.SOLUTION_NAME}}/${{env.SOLUTION_NAME}}.csproj -Version $env:VERSION -OutputDirectory ./Output -Properties Configuration=Release
 
-    - name: Create nuget for ${VIEWS_PROJECT}
-      run: nuget pack ./src/${VIEWS_PROJECT}/${VIEWS_PROJECT}.csproj -Version ${VERSION} -OutputDirectory ./Output -Properties Configuration=Release
+    - name: Create nuget for ${{env.VIEWS_PROJECT}}
+      run: nuget pack ./src/${{env.VIEWS_PROJECT}}/${{env.VIEWS_PROJECT}}.csproj -Version $env:VERSION -OutputDirectory ./Output -Properties Configuration=Release
 
     - name: Upload artifact(s)
       uses: actions/upload-artifact@v2
