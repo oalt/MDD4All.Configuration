@@ -43,7 +43,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1
 
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
+      uses: nuget/setup-nuget@v1
 
     - name: Restore dependencies
       run: nuget restore ./src/${SOLUTION_NAME}.sln
