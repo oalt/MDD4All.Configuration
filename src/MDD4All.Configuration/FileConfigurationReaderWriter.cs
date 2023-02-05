@@ -14,6 +14,20 @@ namespace MDD4All.Configuration
 
         private T _configurationData;
 
+        private string _configurationPathExtension = "";
+
+        public FileConfigurationReaderWriter()
+        {
+        }
+
+        public FileConfigurationReaderWriter(string configurationPathExtension)
+        {
+            if(configurationPathExtension != null)
+            {
+                _configurationPathExtension = configurationPathExtension;
+            }
+        }
+
         public T GetConfiguration()
         {
             T result = default;
@@ -52,7 +66,7 @@ namespace MDD4All.Configuration
 
                 _configurationData = configurationData;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 throw exception;
             }
@@ -60,8 +74,18 @@ namespace MDD4All.Configuration
 
         private string GetConfigurationFilename()
         {
-            string result = ""; 
+            string result = "";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+            if(!string.IsNullOrEmpty(_configurationPathExtension))
+            {
+                path += "/" + _configurationPathExtension;
+            }
+
+            if(!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
 
             result = path + "/" + typeof(T).Name + ".json";
 
