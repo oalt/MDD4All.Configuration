@@ -12,6 +12,8 @@
     <Copyright>(c) MDD4All.de</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>App Settings Infrastructure</PackageTags>
+    <RootNamespace>$(MSBuildProjectName.Replace("-dev", ""))</RootNamespace>
+    <AssemblyName>$(MSBuildProjectName.Replace("-dev", ""))</AssemblyName>
   </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
