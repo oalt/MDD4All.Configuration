@@ -1,0 +1,1 @@
+﻿Library to handle configuration data stored in files.

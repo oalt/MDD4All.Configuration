@@ -9,85 +9,43 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
-      SOLUTION_NAME: MDD4All.Configuration
-      VIEWS_PROJECT: MDD4All.Configuration.Views
+      PROJECT_NAME: MDD4All.Configuration
 
     steps:
-    - name: Checkout repository and submodules
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
+    - name: Checkout source code
+      uses: actions/checkout@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
 
-    - name: Get version form file
-      uses: pCYSl5EDgo/cat@master
+    - name: Read VERSION file
       id: fileVersion
-      with: 
-        path: src/version.txt
+      run: echo "FILE_VERSION_OUT=$(cat src/version.txt)" >> $GITHUB_OUTPUT
 
     - name: Set version as environment variable
+      run: echo "VERSION=$(echo $FILE_VERSION.$GITHUB_RUN_NUMBER)" >> $GITHUB_ENV
       env:
-        FILE_VERSION: ${{steps.fileVersion.outputs.text}}
-      run: echo ("VERSION=" + $env:FILE_VERSION + "." + $env:GITHUB_RUN_NUMBER) >> $env:GITHUB_ENV
+        FILE_VERSION: ${{steps.fileVersion.outputs.FILE_VERSION_OUT}}
 
     - name: Echo version number
-      run: echo $env:VERSION
-
-    - name: Update Assembly info versions
-      uses: Amadevus/pwsh-script@v2
-      id: script
-      with:
-        script: |
-            function Update-SourceVersion
-            {
-                Param ([string]$Version)
-                $NewVersion = 'AssemblyVersion("' + $Version + '")';
-                Write-output $NewVersion
-                $NewFileVersion = 'AssemblyFileVersion("' + $Version + '")';
-                foreach ($o in $input) 
-                {
-                    Write-output $o.FullName
-                    $TmpFile = $o.FullName + ".tmp"
-                    get-content $o.FullName | 
-                    %{$_ -replace 'AssemblyVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)', $NewVersion } |
-                    %{$_ -replace 'AssemblyFileVersion\("[0-9]+(\.([0-9]+|\*)){1,3}"\)', $NewFileVersion }  > $TmpFile
-
-                    move-item $TmpFile $o.FullName -force
-                }
-            }
-            Write-output 'Modifiing AssemblyInfos.'
-            foreach ($file in "AssemblyInfo.cs", "AssemblyInfo.vb" ) 
-            {
-                get-childitem -recurse |? {$_.Name -eq $file} | Update-SourceVersion $env:VERSION;
-            }
-
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
-
-    - name: Setup NuGet
-      uses: nuget/setup-nuget@v1
+      run: echo $VERSION
 
     - name: Restore dependencies
-      run: nuget restore ./src/${{env.SOLUTION_NAME}}.sln
+      run: dotnet restore ./src/${PROJECT_NAME}/${PROJECT_NAME}.csproj
 
-    - name: Build entire solution
-      run: msbuild /p:Configuration=Release /p:Version=${{env.VERSION}} ./src/${{env.SOLUTION_NAME}}.sln
+    - name: Build
+      run: dotnet build --no-restore -c Release /p:Version=${VERSION} ./src/${PROJECT_NAME}/${PROJECT_NAME}.csproj
 
-    - name: Create nuget for Configuration (.NET Standard)
-      run: dotnet pack --configuration Release /p:Version=$env:VERSION --output ./Output ./src/${{env.SOLUTION_NAME}}/${{env.SOLUTION_NAME}}.csproj
-
-    - name: Create nuget for Views (.NET Framework)
-      run: nuget pack ./src/${{env.VIEWS_PROJECT}}/${{env.VIEWS_PROJECT}}.csproj -Version $env:VERSION -OutputDirectory ./Output -Properties Configuration=Release
+    - name: Create nuget package(s)
+      run: dotnet pack --configuration Release /p:Version=${VERSION} --no-build --output ./Output ./src/${PROJECT_NAME}/${PROJECT_NAME}.csproj
 
     - name: Upload artifact(s)
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
-        name: ${{env.SOLUTION_NAME}}.${{env.VERSION}}
+        name: ${{env.PROJECT_NAME}}.${{env.VERSION}}
         path: ./Output/*.nupkg
       
