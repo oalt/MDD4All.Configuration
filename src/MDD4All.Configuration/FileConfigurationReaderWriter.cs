@@ -60,7 +60,7 @@ namespace MDD4All.Configuration
         {
             try
             {
-                string json = JsonConvert.SerializeObject(configurationData);
+                string json = JsonConvert.SerializeObject(configurationData, Formatting.Indented);
 
                 File.WriteAllText(GetConfigurationFilename(), json);
 
